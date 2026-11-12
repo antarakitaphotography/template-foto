@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Antara Kita Studio — Cetak Foto</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<script>try{var t=localStorage.getItem("akstudio-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<style>
+/* ═══ CLAY DESIGN TOKENS ═══ */
+:root{
+  --bg:#f0ebff;--surface:#faf8ff;
+  --purple:#a78bfa;--purple2:#7c3aed;--purple3:#6d28d9;
+  --pink:#f0abfc;--mint:#6ee7b7;--peach:#fca5a5;
+  --text:#2d1f6e;--muted:#7c6ea3;
+  --border:#ddd6fe;
+  --sh1:rgba(124,58,237,.13);--sh2:rgba(124,58,237,.07);
+  --r-xl:22px;--r-lg:16px;--r-md:12px;--r-sm:8px;
+  --font:'Nunito',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);font-family:var(--font);color:var(--text);font-size:14px;line-height:1.5;min-height:100vh}
+body::before{content:'';position:fixed;inset:0;z-index:-1;
+  background:radial-gradient(ellipse 60% 40% at 10% 10%,var(--glow1),transparent 70%),
+             radial-gradient(ellipse 50% 50% at 90% 80%,var(--glow2),transparent 70%),
+             radial-gradient(ellipse 40% 40% at 50% 50%,var(--glow3),transparent 80%)}
+
+/* ─── HEADER ─── */
+header{background:linear-gradient(135deg,var(--purple3),var(--grad-b));padding:28px max(20px,calc((100% - 1240px)/2)) 24px;position:relative;overflow:hidden}
+header::before{content:'';position:absolute;top:-40px;right:-40px;width:220px;height:220px;background:rgba(255,255,255,.08);border-radius:50%}
+header::after{content:'';position:absolute;bottom:-60px;left:20%;width:160px;height:160px;background:rgba(255,255,255,.06);border-radius:50%}
+.header-inner{position:relative;z-index:1}
+.header-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.25);border-radius:100px;padding:3px 12px;font-size:11px;font-weight:800;color:#fff;letter-spacing:.05em;text-transform:uppercase;margin-bottom:10px}
+header h1{font-size:26px;font-weight:900;color:#fff;margin-bottom:4px;letter-spacing:-.3px}
+header p{color:rgba(255,255,255,.75);font-size:13px;font-weight:600}
+
+/* ─── LAYOUT ─── */
+main{max-width:1240px;margin:28px auto;padding:0 20px;display:grid;grid-template-columns:minmax(300px,440px) 1fr;gap:22px}
+.clay-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r-xl);padding:22px;box-shadow:0 2px 0 rgba(255,255,255,.9) inset,0 8px 24px var(--sh1),0 2px 6px var(--sh2)}
+.section-title{font-size:15px;font-weight:800;color:var(--text);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.section-title .pill{background:linear-gradient(135deg,var(--purple),var(--accent2));color:#fff;font-size:11px;font-weight:800;padding:2px 9px;border-radius:100px}
+
+/* ─── DROP ZONE ─── */
+.drop-zone{border:2.5px dashed var(--purple);border-radius:var(--r-lg);padding:30px 20px;text-align:center;cursor:pointer;transition:all .2s ease;background:linear-gradient(135deg,var(--tint3),var(--tint4));position:relative;margin-bottom:12px}
+.drop-zone:hover,.drop-zone.drag-over{border-color:var(--purple2);background:linear-gradient(135deg,var(--tint1),var(--tint2));box-shadow:0 0 0 5px rgba(var(--rgbl),.25);transform:scale(1.01)}
+.drop-zone.drag-over{box-shadow:0 0 0 6px rgba(var(--rgbl),.4)}
+.drop-icon{font-size:40px;margin-bottom:8px;display:block;animation:float 3s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.drop-zone-text{font-weight:800;font-size:15px;color:var(--purple2);margin-bottom:3px}
+.drop-zone-sub{font-size:12px;color:var(--muted);font-weight:600}
+.drop-zone input[type=file]{display:none}
+
+/* ─── BUTTONS ─── */
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.clay-btn{display:inline-flex;align-items:center;gap:5px;border:none;border-radius:var(--r-md);padding:9px 15px;font-family:var(--font);font-weight:800;font-size:13px;cursor:pointer;transition:all .15s ease;line-height:1}
+.clay-btn:active{transform:translateY(2px)}
+.clay-btn.primary{background:linear-gradient(135deg,var(--purple2),var(--grad-b));color:#fff;box-shadow:0 4px 0 var(--deep),0 6px 16px rgba(var(--rgb),.35)}
+.clay-btn.primary:active{box-shadow:0 1px 0 var(--deep)}
+.clay-btn.secondary{background:linear-gradient(135deg,var(--tint1),var(--tint2));color:var(--purple3);box-shadow:0 4px 0 var(--edge2),0 4px 12px rgba(var(--rgbl),.25)}
+.clay-btn.secondary:active{box-shadow:0 1px 0 var(--edge2)}
+.clay-btn.ghost{background:var(--tint5);color:var(--muted);box-shadow:0 3px 0 var(--edge3)}
+.clay-btn.ghost:active{box-shadow:0 1px 0 var(--edge3)}
+.clay-btn:disabled{opacity:.45;cursor:not-allowed;transform:none!important}
+.hint{font-size:12px;color:var(--muted);font-weight:600;line-height:1.6;margin-bottom:10px}
+
+/* ─── PHOTO LIST ─── */
+.photo-list{display:flex;flex-direction:column;gap:11px;max-height:530px;overflow-y:auto;padding-right:4px;margin-top:4px}
+.photo-list::-webkit-scrollbar{width:5px}
+.photo-list::-webkit-scrollbar-track{background:var(--tint1);border-radius:10px}
+.photo-list::-webkit-scrollbar-thumb{background:var(--purple);border-radius:10px}
+.photo-card{background:linear-gradient(135deg,var(--surface),var(--tint4));border:1.5px solid var(--border);border-radius:var(--r-lg);padding:11px;display:grid;grid-template-columns:72px 1fr;gap:10px;box-shadow:0 3px 10px rgba(var(--rgb),.08);transition:box-shadow .2s}
+.photo-card:hover{box-shadow:0 6px 18px rgba(var(--rgb),.14)}
+.thumb{width:72px;height:90px;object-fit:cover;border-radius:10px;box-shadow:0 4px 10px rgba(var(--rgb),.2)}
+.photo-head{display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:7px}
+.photo-head-left{flex:1;min-width:0}
+.filename{font-size:12px;font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text);display:block}
+.page-tag{display:inline-block;margin-top:3px;font-size:10px;font-weight:800;background:linear-gradient(135deg,var(--tint1),var(--tint2));color:var(--purple2);padding:1px 7px;border-radius:100px;border:1px solid var(--edge)}
+.btn-remove{background:#fff1f2;color:#be123c;border:1.5px solid #fecdd3;border-radius:var(--r-sm);width:28px;height:28px;font-size:14px;font-weight:900;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s;box-shadow:0 2px 0 #fda4af}
+.btn-remove:hover{background:#ffe4e6;transform:scale(1.08)}
+.btn-remove:active{transform:translateY(2px);box-shadow:none}
+
+/* ─── SLIDER GROUPS ─── */
+.crop-group{margin-top:5px;border-radius:var(--r-md);padding:9px 11px;background:color-mix(in srgb,var(--tint1) 50%,transparent);border:1px solid var(--edge)}
+.crop-group-title{font-size:10px;font-weight:800;color:var(--purple2);letter-spacing:.06em;text-transform:uppercase;margin-bottom:7px;display:flex;align-items:center;gap:5px}
+.crop-group-title::before{content:'';display:inline-block;width:8px;height:8px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--pink))}
+.crop{display:flex;flex-direction:column;gap:5px}
+.crop label{font-size:11px;color:var(--muted);font-weight:700;display:flex;flex-direction:column;gap:3px}
+.slider-row{display:flex;align-items:center;gap:7px}
+.slider-row input[type=range]{flex:1;-webkit-appearance:none;height:6px;border-radius:10px;background:linear-gradient(to right,var(--purple),var(--accent2));outline:none;cursor:pointer}
+.slider-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:#fff;border:2px solid var(--purple);box-shadow:0 2px 6px rgba(var(--rgbl),.5);cursor:grab;transition:transform .15s}
+.slider-row input[type=range]::-webkit-slider-thumb:active{transform:scale(1.2);cursor:grabbing}
+.slider-val{font-size:11px;font-weight:800;color:var(--purple2);min-width:40px;text-align:center;background:var(--tint1);border-radius:var(--r-sm);padding:2px 6px;border:1px solid var(--edge)}
+
+/* ─── PREVIEW PANEL ─── */
+.preview-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.preview-top-left h2{font-size:15px;font-weight:800}
+.preview-badge{font-size:11px;font-weight:700;background:linear-gradient(135deg,var(--tint1),var(--tint2));color:var(--purple2);padding:3px 10px;border-radius:100px;border:1px solid var(--edge);margin-top:4px;display:inline-block}
+.select-wrap{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.select-wrap label{font-size:13px;font-weight:800;color:var(--text)}
+.clay-select{flex:1;min-width:200px;border:1.5px solid var(--border);border-radius:var(--r-md);padding:9px 12px;font-family:var(--font);font-size:13px;font-weight:700;color:var(--text);background:var(--tint3);box-shadow:0 3px 0 var(--edge);outline:none;cursor:pointer;transition:border-color .2s,box-shadow .2s;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
+.clay-select:focus{border-color:var(--purple);box-shadow:0 3px 0 var(--purple),0 0 0 3px rgba(var(--rgbl),.2)}
+
+/* ─── STATS ─── */
+.stats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.stat{background:linear-gradient(135deg,var(--tint3),var(--tint4));border:1.5px solid var(--border);border-radius:var(--r-md);padding:9px 12px;font-size:11px;font-weight:700;color:var(--muted);box-shadow:0 3px 0 var(--edge);flex:1;min-width:62px;text-align:center}
+.stat b{display:block;font-size:20px;font-weight:900;color:var(--purple3)}
+
+/* ─── CANVAS WRAP ─── */
+.canvas-wrap{background:linear-gradient(135deg,var(--tint1),var(--tint2));border-radius:var(--r-xl);padding:16px;display:flex;justify-content:center;align-items:flex-start;min-height:430px;overflow:auto;box-shadow:inset 0 2px 8px rgba(var(--rgb),.12)}
+canvas{display:block;width:min(100%,410px);height:auto;background:#fff;border-radius:10px;box-shadow:0 8px 32px rgba(var(--rgb),.18),0 2px 8px rgba(var(--rgb),.1)}
+
+/* ─── PAGE NAVIGATION ─── */
+.page-nav-wrap{display:none;align-items:center;justify-content:center;gap:10px;margin-top:14px;padding:12px 16px;background:linear-gradient(135deg,var(--tint3),var(--tint4));border-radius:var(--r-lg);border:1.5px solid var(--border);box-shadow:0 3px 0 var(--edge)}
+.page-nav-info{display:flex;flex-direction:column;align-items:center;gap:6px}
+.page-indicator{font-size:13px;font-weight:800;color:var(--purple2)}
+.page-dots{display:flex;gap:5px;align-items:center;flex-wrap:wrap;justify-content:center;max-width:200px}
+.page-dot{width:8px;height:8px;border-radius:50%;background:var(--edge);cursor:pointer;transition:all .2s;border:none;padding:0}
+.page-dot.active{background:var(--purple2);transform:scale(1.3);box-shadow:0 0 0 3px rgba(var(--rgb),.2)}
+.page-dot:hover:not(.active){background:var(--purple)}
+
+/* ─── STATUS ─── */
+.status{font-size:12px;font-weight:600;color:var(--muted);margin-top:10px;padding:8px 12px;background:var(--tint3);border-radius:var(--r-md);border:1px solid var(--border)}
+.warning{color:#b45309;font-weight:800}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.actions-row2{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+
+/* ─── EMPTY STATE ─── */
+.empty-state{text-align:center;padding:24px 10px;color:var(--muted);font-weight:700;font-size:13px}
+.empty-state span{font-size:36px;display:block;margin-bottom:8px;opacity:.6}
+
+/* ─── RESPONSIVE ─── */
+footer{max-width:1240px;margin:0 auto 30px;padding:0 20px;color:var(--muted);font-size:12px;font-weight:600;text-align:center}
+@media(max-width:860px){main{grid-template-columns:1fr}.photo-list{max-height:none}.canvas-wrap{min-height:300px}}
+
+/* ═══ TEMA ═══ */
+:root{--tint1:#ede9fe;--tint2:#fce7f3;--tint3:#f5f3ff;--tint4:#fdf4ff;--tint5:#f1eeff;--edge:#ddd6fe;--edge2:#c4b5fd;--edge3:#d8d0f5;--deep:#5b21b6;--accent2:#c084fc;--grad-b:#a21caf;--glow1:#ddd6fe88;--glow2:#fce7f388;--glow3:#e0f2fe44;--rgb:124,58,237;--rgbl:167,139,250}
+:root[data-theme="sakura"]{--bg:#ffebf2;--surface:#fff7fa;--text:#671e39;--muted:#9c6378;--border:#fccfdf;--purple:#fa89b3;--purple2:#ed3b7c;--purple3:#d02564;--accent2:#fc8897;--grad-b:#ad3b1f;--pink:#fab09e;--tint1:#fee1ec;--tint2:#fde7e2;--tint3:#fff0f5;--tint4:#fff3f0;--tint5:#ffebf2;--edge:#fccfdf;--edge2:#fdb4cf;--edge3:#f3cedc;--deep:#aa184e;--glow1:#fccfdf88;--glow2:#fde7e288;--glow3:#fde2ec44;--rgb:237,59,124;--rgbl:250,137,179;--sh1:rgba(237,59,124,.13);--sh2:rgba(237,59,124,.07)}
+:root[data-theme="samudra"]{--bg:#ebf6ff;--surface:#f7fcff;--text:#1e4867;--muted:#63849c;--border:#cfe9fc;--purple:#89cbfa;--purple2:#3ba3ed;--purple3:#2589d0;--accent2:#88b0fc;--grad-b:#1fad9a;--pink:#9efaee;--tint1:#e1f2fe;--tint2:#e2fdfa;--tint3:#f0f9ff;--tint4:#f0fffd;--tint5:#ebf6ff;--edge:#cfe9fc;--edge2:#b4dffd;--edge3:#cee3f3;--deep:#186daa;--glow1:#cfe9fc88;--glow2:#e2fdfa88;--glow3:#e2f2fd44;--rgb:59,163,237;--rgbl:137,203,250;--sh1:rgba(59,163,237,.13);--sh2:rgba(59,163,237,.07)}
+:root[data-theme="hutan"]{--bg:#ebfff5;--surface:#f7fffb;--text:#1e6745;--muted:#639c81;--border:#cffce7;--purple:#89fac6;--purple2:#3bed9a;--purple3:#25d080;--accent2:#88fce1;--grad-b:#5aad1f;--pink:#c4fa9e;--tint1:#e1fef1;--tint2:#edfde2;--tint3:#f0fff8;--tint4:#f6fff0;--tint5:#ebfff5;--edge:#cffce7;--edge2:#b4fddb;--edge3:#cef3e2;--deep:#18aa66;--glow1:#cffce788;--glow2:#edfde288;--glow3:#e2fdf144;--rgb:59,237,154;--rgbl:137,250,198;--sh1:rgba(59,237,154,.13);--sh2:rgba(59,237,154,.07)}
+:root[data-theme="senja"]{--bg:#fff2eb;--surface:#fffaf7;--text:#67391e;--muted:#9c7863;--border:#fcdfcf;--purple:#fab389;--purple2:#ed7c3b;--purple3:#d06425;--accent2:#fccd88;--grad-b:#ad1f42;--pink:#fa9eb5;--tint1:#feece1;--tint2:#fde2e9;--tint3:#fff5f0;--tint4:#fff0f4;--tint5:#fff2eb;--edge:#fcdfcf;--edge2:#fdcfb4;--edge3:#f3dcce;--deep:#aa4e18;--glow1:#fcdfcf88;--glow2:#fde2e988;--glow3:#fdece244;--rgb:237,124,59;--rgbl:250,179,137;--sh1:rgba(237,124,59,.13);--sh2:rgba(237,124,59,.07)}
+:root[data-theme="kopi"]{--bg:#f9f5f1;--surface:#fdfbfa;--text:#524133;--muted:#8b7f74;--border:#efe5dc;--purple:#d9c0aa;--purple2:#b9916f;--purple3:#9e7856;--accent2:#dacca9;--grad-b:#845a48;--pink:#dfc4b9;--tint1:#f6efea;--tint2:#f5edea;--tint3:#fbf7f4;--tint4:#fbf6f4;--tint5:#f9f5f1;--edge:#efe5dc;--edge2:#e8d8c9;--edge3:#e8e0d9;--deep:#7f5f42;--glow1:#efe5dc88;--glow2:#f5edea88;--glow3:#f5efea44;--rgb:185,145,111;--rgbl:217,192,170;--sh1:rgba(185,145,111,.13);--sh2:rgba(185,145,111,.07)}
+:root[data-theme="gelap"]{--bg:#14101f;--surface:#1e1830;--text:#efeaff;--muted:#a99fcb;--border:#3b2f63;--purple:#a78bfa;--purple2:#8b5cf6;--purple3:#7c3aed;--accent2:#c084fc;--grad-b:#c026d3;--pink:#e879f9;--tint1:#2a2150;--tint2:#33204d;--tint3:#231b3d;--tint4:#291d40;--tint5:#261e42;--edge:#3b2f63;--edge2:#4c3d80;--edge3:#34295a;--deep:#3b0f7a;--glow1:#7c3aed33;--glow2:#c026d322;--glow3:#38bdf811;--rgb:0,0,0;--rgbl:139,92,246;--sh1:rgba(0,0,0,.35);--sh2:rgba(0,0,0,.25)}
+
+body,.clay-card,.photo-card,.stat,.clay-select,.canvas-wrap,header{transition:background-color .25s,border-color .25s,color .25s}
+:root[data-theme="gelap"] .btn-remove{background:#3a1822;color:#fda4af;border-color:#6b2536;box-shadow:0 2px 0 #4a1d2b}
+:root[data-theme="gelap"] .warning{color:#fbbf24}
+:root[data-theme="gelap"] canvas{box-shadow:0 8px 32px rgba(0,0,0,.5)}
+.theme-picker{position:absolute;top:0;right:0;z-index:2;display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);border-radius:100px;padding:5px 8px 5px 12px;backdrop-filter:blur(6px)}
+.theme-picker .tp-label{font-size:11px;font-weight:800;color:#fff;letter-spacing:.04em;margin-right:2px}
+.theme-dot{width:24px;height:24px;border-radius:50%;border:2.5px solid rgba(255,255,255,.55);cursor:pointer;padding:0;font-size:0;transition:transform .15s,border-color .15s;box-shadow:0 2px 6px rgba(0,0,0,.2)}
+.theme-dot:hover{transform:scale(1.15)}
+.theme-dot[aria-pressed="true"]{border-color:#fff;transform:scale(1.2);box-shadow:0 0 0 3px rgba(255,255,255,.35),0 2px 6px rgba(0,0,0,.25)}
+.theme-dot:focus-visible{outline:2px solid #fff;outline-offset:2px}
+@media(max-width:700px){.theme-picker{position:static;margin-bottom:12px;width:max-content;max-width:100%;flex-wrap:wrap}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+  <div class="theme-picker" role="group" aria-label="Pilih tema"><span class="tp-label">🎨 Tema</span><button type="button" class="theme-dot" data-theme="ungu" title="Ungu Clay" aria-label="Tema Ungu Clay" aria-pressed="false" style="background:linear-gradient(135deg,#7c3aed,#a21caf)"></button><button type="button" class="theme-dot" data-theme="sakura" title="Sakura Pink" aria-label="Tema Sakura Pink" aria-pressed="false" style="background:linear-gradient(135deg,#ed3b7c,#ad3b1f)"></button><button type="button" class="theme-dot" data-theme="samudra" title="Samudra" aria-label="Tema Samudra" aria-pressed="false" style="background:linear-gradient(135deg,#3ba3ed,#1fad9a)"></button><button type="button" class="theme-dot" data-theme="hutan" title="Hutan Mint" aria-label="Tema Hutan Mint" aria-pressed="false" style="background:linear-gradient(135deg,#3bed9a,#5aad1f)"></button><button type="button" class="theme-dot" data-theme="senja" title="Senja" aria-label="Tema Senja" aria-pressed="false" style="background:linear-gradient(135deg,#ed7c3b,#ad1f42)"></button><button type="button" class="theme-dot" data-theme="kopi" title="Kopi Susu" aria-label="Tema Kopi Susu" aria-pressed="false" style="background:linear-gradient(135deg,#b9916f,#845a48)"></button><button type="button" class="theme-dot" data-theme="gelap" title="Mode Gelap" aria-label="Tema Mode Gelap" aria-pressed="false" style="background:linear-gradient(135deg,#14101f,#8b5cf6)"></button></div>
+    <div class="header-badge">📸 Antara Kita Studio</div>
+    <h1>Aplikasi Cetak Foto</h1>
+    <p>Susun foto otomatis pada lembar 4R · multi-halaman · siap cetak 10,16 × 15,24 cm · 300 DPI</p>
+  </div>
+</header>
+
+<main>
+<!-- ═══ PANEL KIRI ═══ -->
+<section class="clay-card">
+  <div class="section-title"><span class="pill">01</span> Masukkan Foto</div>
+
+  <div class="drop-zone" id="dropZone">
+    <label for="files" style="display:block;cursor:pointer">
+      <span class="drop-icon">🖼️</span>
+      <div class="drop-zone-text">Seret &amp; lepas foto di sini</div>
+      <div class="drop-zone-sub">atau klik untuk pilih file · mendukung banyak foto sekaligus</div>
+      <input id="files" type="file" accept="image/*" multiple>
+    </label>
+  </div>
+
+  <div class="toolbar">
+    <button class="clay-btn ghost" id="clearAll">🗑 Hapus Semua</button>
+  </div>
+
+  <p class="hint">Foto diproses di browser — tidak diunggah ke server.<br>
+  <b>Template 3×4:</b> Upload 2 foto → foto ke-1 mengisi 6 slot kiri, foto ke-2 mengisi 6 slot kanan. Setiap pasang 2 foto = 1 lembar 4R baru.</p>
+
+  <div id="photoList" class="photo-list">
+    <div class="empty-state"><span>🏞️</span>Belum ada foto.<br>Upload atau seret foto untuk mulai.</div>
+  </div>
+</section>
+
+<!-- ═══ PANEL KANAN ═══ -->
+<section class="clay-card">
+  <div class="preview-top">
+    <div class="preview-top-left">
+      <div class="section-title"><span class="pill">02</span> Preview Cetak 4R</div>
+      <div class="preview-badge">📐 Output: 4 × 6 inci · 300 DPI</div>
+    </div>
+  </div>
+
+  <div class="select-wrap">
+    <label for="layoutMode">🗂 Template</label>
+    <select id="layoutMode" class="clay-select">
+      <option value="auto">✨ Otomatis (rapat)</option>
+      <option value="twelve">📋 12 foto 3×4 cm (2 foto/lembar)</option>
+      <option value="combo">🎞 Kombinasi — 4 foto 4×6 + 7 foto 2×3</option>
+    </select>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><b id="totalCount">0</b>Foto</div>
+    <div class="stat"><b id="pageCount">0</b>Lembar</div>
+    <div class="stat"><b id="placedCount">0</b>Di halaman ini</div>
+    <div class="stat"><b>300</b>DPI</div>
+  </div>
+
+  <div class="canvas-wrap">
+    <canvas id="sheet" width="1200" height="1800"></canvas>
+  </div>
+
+  <!-- PAGE NAVIGATION -->
+  <div class="page-nav-wrap" id="pageNavWrap">
+    <button class="clay-btn ghost" id="prevPage" disabled>◀</button>
+    <div class="page-nav-info">
+      <span class="page-indicator" id="pageIndicator">Halaman 1 dari 1</span>
+      <div class="page-dots" id="pageDots"></div>
+    </div>
+    <button class="clay-btn ghost" id="nextPage" disabled>▶</button>
+  </div>
+
+  <div id="status" class="status">Upload foto untuk melihat hasil penataan.</div>
+
+  <!-- DOWNLOAD CURRENT PAGE -->
+  <div class="actions">
+    <button class="clay-btn primary" id="downloadJpg">⬇ JPG (Halaman Ini)</button>
+    <button class="clay-btn secondary" id="downloadPng">⬇ PNG (Halaman Ini)</button>
+  </div>
+  <!-- DOWNLOAD ALL & PRINT -->
+  <div class="actions-row2">
+    <button class="clay-btn secondary" id="downloadAllPdf">📄 Unduh Semua PDF</button>
+    <button class="clay-btn ghost" id="print">🖨 Cetak Halaman Ini</button>
+    <button class="clay-btn ghost" id="printAll">🖨 Cetak Semua</button>
+  </div>
+
+  <p class="hint" style="margin-top:12px">Saat mencetak: ukuran kertas 4R/4×6 inci · skala 100% · nonaktifkan Fit to Page.</p>
+</section>
+</main>
+
+<footer>Antara Kita Studio · 1200×1800 px (300 DPI) · Multi-halaman otomatis · Proses di browser</footer>
+
+<script>
+(()=>{
+/* ═══ KONSTANTA ═══ */
+const W=1200,H=1800,DPI=300,PPM=DPI/2.54;
+const canvas=document.getElementById('sheet'),ctx=canvas.getContext('2d');
+const list=document.getElementById('photoList');
+const dropZone=document.getElementById('dropZone');
+
+let photos=[],nextId=1;
+let allPageLayouts=[], // [{placed:[...items]}]
+    currentPage=0;
+
+const $=id=>document.getElementById(id);
+const px=cm=>Math.round(cm*PPM);
+const cropDefaults=()=>({x:50,y:50,zoom:100});
+
+function escapeHtml(s){
+  return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+/* ═══ DRAG & DROP ═══ */
+document.addEventListener('dragover',e=>e.preventDefault());
+document.addEventListener('drop',e=>e.preventDefault());
+dropZone.addEventListener('dragenter',e=>{e.preventDefault();dropZone.classList.add('drag-over');});
+dropZone.addEventListener('dragleave',e=>{if(!dropZone.contains(e.relatedTarget))dropZone.classList.remove('drag-over');});
+dropZone.addEventListener('dragover',e=>{e.preventDefault();dropZone.classList.add('drag-over');});
+dropZone.addEventListener('drop',e=>{
+  e.preventDefault();dropZone.classList.remove('drag-over');
+  if(e.dataTransfer.files.length)addFiles(e.dataTransfer.files);
+});
+$('files').addEventListener('change',e=>{addFiles(e.target.files);e.target.value='';});
+
+function addFiles(files){
+  const toLoad=[...[...files].filter(f=>f.type.startsWith('image/'))];
+  if(!toLoad.length)return;
+  let loaded=0;
+  toLoad.forEach(file=>{
+    const url=URL.createObjectURL(file),img=new Image();
+    img.onload=()=>{
+      photos.push({id:nextId++,name:file.name,url,img,
+        settings:{'3x4':cropDefaults(),'4x6':cropDefaults(),'2.2x2.84':cropDefaults()}});
+      loaded++;
+      if(loaded===toLoad.length){renderList();rebuild();}
+    };
+    img.onerror=()=>URL.revokeObjectURL(url);
+    img.src=url;
+  });
+}
+
+/* ═══ RENDER LIST ═══ */
+function renderSliderGroup(p,sizeKey,label){
+  const s=p.settings[sizeKey],sid=sizeKey.replace(/\./g,'_');
+  return `<div class="crop-group">
+  <div class="crop-group-title">${label}</div>
+  <div class="crop">
+    <label>Horizontal
+      <div class="slider-row">
+        <input class="x" data-id="${p.id}" data-size="${sizeKey}" type="range" min="0" max="100" value="${s.x}" step="1">
+        <span class="slider-val" id="vx-${p.id}-${sid}">${s.x}%</span>
+      </div>
+    </label>
+    <label>Vertikal
+      <div class="slider-row">
+        <input class="y" data-id="${p.id}" data-size="${sizeKey}" type="range" min="0" max="100" value="${s.y}" step="1">
+        <span class="slider-val" id="vy-${p.id}-${sid}">${s.y}%</span>
+      </div>
+    </label>
+    <label>Zoom
+      <div class="slider-row">
+        <input class="zoom" data-id="${p.id}" data-size="${sizeKey}" type="range" min="100" max="200" value="${s.zoom}" step="1">
+        <span class="slider-val" id="vz-${p.id}-${sid}">${s.zoom}%</span>
+      </div>
+    </label>
+  </div>
+</div>`;
+}
+
+function getPageTag(photoIdx,mode){
+  if(mode==='twelve'){
+    const pg=Math.floor(photoIdx/2)+1;
+    return `<span class="page-tag">Lembar ${pg}</span>`;
+  }
+  if(mode==='combo'){
+    const pg=Math.floor(photoIdx/2)+1;
+    return `<span class="page-tag">Lembar ${pg}</span>`;
+  }
+  return '';
+}
+
+function renderList(){
+  if(!photos.length){
+    list.innerHTML='<div class="empty-state"><span>🏞️</span>Belum ada foto.<br>Upload atau seret foto untuk mulai.</div>';
+    return;
+  }
+  const mode=$('layoutMode').value;
+  list.innerHTML=photos.map((p,idx)=>{
+    let sliders='';
+    if(mode==='combo'){
+      sliders=renderSliderGroup(p,'4x6','Slot 4×6 cm')+renderSliderGroup(p,'2.2x2.84','Slot 2×3 cm');
+    }else if(mode==='twelve'){
+      sliders=renderSliderGroup(p,'3x4','Slot 3×4 cm');
+    }else{
+      sliders=renderSliderGroup(p,'3x4','Crop &amp; Zoom');
+    }
+    return `<article class="photo-card" data-id="${p.id}">
+  <img class="thumb" src="${p.url}" alt="">
+  <div>
+    <div class="photo-head">
+      <div class="photo-head-left">
+        <span class="filename" title="${escapeHtml(p.name)}">${escapeHtml(p.name)}</span>
+        ${getPageTag(idx,mode)}
+      </div>
+      <button class="btn-remove" data-action="remove" data-id="${p.id}" title="Hapus">✕</button>
+    </div>
+    ${sliders}
+  </div>
+</article>`;
+  }).join('');
+}
+
+/* ═══ SLIDER EVENTS ═══ */
+list.addEventListener('click',e=>{
+  const btn=e.target.closest('[data-action="remove"]');
+  if(!btn)return;
+  const id=Number(btn.dataset.id),p=photos.find(v=>v.id===id);
+  if(p)URL.revokeObjectURL(p.url);
+  photos=photos.filter(v=>v.id!==id);
+  renderList();rebuild();
+});
+
+list.addEventListener('input',e=>{
+  const el=e.target;
+  if(!el.matches('input[type=range]'))return;
+  const id=Number(el.dataset.id),sk=el.dataset.size;
+  const p=photos.find(v=>v.id===id);
+  if(!p||!p.settings[sk])return;
+  const sid=sk.replace(/\./g,'_');
+  if(el.classList.contains('x')){p.settings[sk].x=+el.value;const v=$(`vx-${id}-${sid}`);if(v)v.textContent=el.value+'%';}
+  if(el.classList.contains('y')){p.settings[sk].y=+el.value;const v=$(`vy-${id}-${sid}`);if(v)v.textContent=el.value+'%';}
+  if(el.classList.contains('zoom')){p.settings[sk].zoom=+el.value;const v=$(`vz-${id}-${sid}`);if(v)v.textContent=el.value+'%';}
+  redrawCurrent();
+});
+
+/* ═══ BUILD ALL PAGES ═══ */
+function buildAllPageLayouts(){
+  allPageLayouts=[];
+  const mode=$('layoutMode').value;
+  if(!photos.length){allPageLayouts=[{placed:[]}];return;}
+
+  if(mode==='twelve'){
+    /* ── Template 3×4: setiap 2 foto = 1 lembar
+       foto ke-1 → 6 slot KIRI (portrait)
+       foto ke-2 → 6 slot KANAN (landscape/rotated)          ── */
+    if(photos.length===1){
+      // 1 foto: 12 salinan
+      const p=photos[0];
+      const items=Array(12).fill(0).map(()=>({p,w:px(3),h:px(4),size:'3x4'}));
+      const tpl=templatePack(items,'twelve');
+      allPageLayouts.push({placed:tpl?centerLayout(tpl.placed):[]});
+    }else{
+      for(let i=0;i<photos.length;i+=2){
+        const p1=photos[i],p2=photos[i+1]||photos[i];
+        // 6 pertama = p1 (kiri), 6 berikutnya = p2 (kanan)
+        const items=[
+          ...Array(6).fill(0).map(()=>({p:p1,w:px(3),h:px(4),size:'3x4'})),
+          ...Array(6).fill(0).map(()=>({p:p2,w:px(3),h:px(4),size:'3x4'}))
+        ];
+        const tpl=templatePack(items,'twelve');
+        allPageLayouts.push({placed:tpl?centerLayout(tpl.placed):[]});
+      }
+    }
+
+  }else if(mode==='combo'){
+    /* ── Template Combo: setiap 2 foto = 1 lembar
+       p1 & p2 mengisi 4 slot besar, foto lain mengisi slot kecil  ── */
+    for(let i=0;i<photos.length;i+=2){
+      const p1=photos[i],p2=photos[i+1]||photos[i];
+      const items=[];
+      items.push({p:p1,w:px(4),h:px(6),size:'4x6'});
+      items.push({p:p1,w:px(4),h:px(6),size:'4x6'});
+      items.push({p:p2,w:px(4),h:px(6),size:'4x6'});
+      items.push({p:p2,w:px(4),h:px(6),size:'4x6'});
+      for(let j=0;j<7;j++){
+        const pSmall=photos[(i+2+j)%photos.length];
+        items.push({p:pSmall,w:px(2.2),h:px(2.84),size:'2.2x2.84'});
+      }
+      const tpl=templatePack(items,'combo');
+      allPageLayouts.push({placed:tpl?centerLayout(tpl.placed):[]});
+    }
+
+  }else{
+    /* ── Mode Otomatis: pack greedily, overflow → halaman berikutnya ── */
+    let remaining=photos.map(p=>({p,w:px(3),h:px(4),size:'3x4'}));
+    for(let guard=0;remaining.length>0&&guard<300;guard++){
+      const res=autoPack(remaining);
+      allPageLayouts.push({placed:centerLayout(res.placed)});
+      if(!res.overflow.length)break;
+      if(res.overflow.length===remaining.length)break; // safety: no progress
+      remaining=res.overflow;
+    }
+  }
+
+  if(!allPageLayouts.length)allPageLayouts=[{placed:[]}];
+  if(currentPage>=allPageLayouts.length)currentPage=0;
+}
+
+/* ═══ TEMPLATE PACKING ═══ */
+function templatePack(items,mode){
+  const placed=[],overflow=[],bySize={};
+  items.forEach(it=>(bySize[it.size]??=[]).push(it));
+  const slotCm=(item,x,y,w,h,rot=false)=>{
+    if(item)placed.push({...item,x:px(x),y:px(y),w:px(w),h:px(h),rot});
+  };
+
+  if(mode==='twelve'){
+    if(items.length!==12||items.some(i=>i.size!=='3x4'))return null;
+    const a=[...bySize['3x4']];
+    // 6 slot kiri: 2 kolom × 3 baris (portrait)
+    for(let r=0;r<3;r++) for(let c=0;c<2;c++) slotCm(a.shift(),c*3,r*4,3,4,false);
+    // 4 slot kanan: 1 kolom × 4 baris (landscape/rotated)
+    for(let r=0;r<4;r++) slotCm(a.shift(),6,r*3,4,3,true);
+    // 2 slot bawah (rotated)
+    slotCm(a.shift(),2,12,4,3,true);
+    slotCm(a.shift(),6,12,4,3,true);
+    return {placed,overflow};
+  }
+
+  if(mode==='combo'){
+    const big=bySize['4x6']||[],small=bySize['2.2x2.84']||[];
+    if(big.length!==4||small.length!==7||items.length!==11)return null;
+    slotCm(big[0],0,0,4,6,false); slotCm(big[1],0,6,4,6,false);
+    slotCm(big[2],4,0,6,4,true);  slotCm(big[3],4,4,6,4,true);
+    slotCm(small[0],4,8,2.84,2.2,true);    slotCm(small[1],6.84,8,2.84,2.2,true);
+    slotCm(small[2],4,10.2,2.84,2.2,true); slotCm(small[3],6.84,10.2,2.84,2.2,true);
+    const bw=3*2.84+2*0.02,bx=(6.84+2.84)-bw;
+    slotCm(small[4],bx,12.4,2.84,2.2,true);
+    slotCm(small[5],bx+2.86,12.4,2.84,2.2,true);
+    slotCm(small[6],bx+5.72,12.4,2.84,2.2,true);
+    return {placed,overflow};
+  }
+  return null;
+}
+
+function autoPack(items){
+  let x=0,y=0,rowH=0,placed=[],overflow=[];const gap=5;
+  for(const item of items){
+    const choices=[{w:item.w,h:item.h,rot:false},{w:item.h,h:item.w,rot:true}].filter(o=>o.w<=W&&o.h<=H);
+    let selected=null;
+    for(const o of choices){
+      let xx=x,yy=y,rh=rowH;
+      if(xx+o.w>W){xx=0;yy+=rh+gap;rh=0;}
+      if(yy+o.h<=H){
+        const score=(xx===0&&x!==0?100000:0)+Math.max(rh,o.h)*10+(o.rot?1:0);
+        if(!selected||score<selected.score)selected={...o,x:xx,y:yy,score};
+      }
+    }
+    if(!selected){overflow.push(item);continue;}
+    if(selected.x===0&&x!==0){y=selected.y;rowH=0;x=0;}
+    placed.push({...item,x:selected.x,y:selected.y,w:selected.w,h:selected.h,rot:selected.rot});
+    x=selected.x+selected.w+gap;rowH=Math.max(rowH,selected.h);
+  }
+  return {placed,overflow};
+}
+
+/* ═══ DRAWING ═══ */
+function centerLayout(placed){
+  if(!placed.length)return placed;
+  const minX=Math.min(...placed.map(p=>p.x)),minY=Math.min(...placed.map(p=>p.y));
+  const maxX=Math.max(...placed.map(p=>p.x+p.w)),maxY=Math.max(...placed.map(p=>p.y+p.h));
+  const dx=Math.round((W-(maxX-minX))/2)-minX;
+  const dy=Math.round((H-(maxY-minY))/2)-minY;
+  return placed.map(p=>({...p,x:p.x+dx,y:p.y+dy}));
+}
+
+function drawPhoto(item,tctx=ctx){
+  const {p,x,y,w,h,rot,size}=item;
+  const s=p.settings[size]||cropDefaults();
+  const inset=px(size==='2.2x2.84'?0.10:0.20);
+  const iw=Math.max(1,(rot?h:w)-2*inset),ih=Math.max(1,(rot?w:h)-2*inset);
+  tctx.save();
+  tctx.fillStyle='#fff';tctx.fillRect(x,y,w,h);
+  tctx.translate(x+w/2,y+h/2);
+  if(rot)tctx.rotate(Math.PI/2);
+  const target=iw/ih,src=p.img.width/p.img.height;
+  let sw,sh;
+  if(src>target){sh=p.img.height;sw=sh*target;}else{sw=p.img.width;sh=sw/target;}
+  const z=s.zoom/100;sw/=z;sh/=z;
+  const maxX=Math.max(0,p.img.width-sw),maxY=Math.max(0,p.img.height-sh);
+  const sx=Math.max(0,Math.min(maxX,maxX*s.x/100));
+  const sy=Math.max(0,Math.min(maxY,maxY*s.y/100));
+  tctx.drawImage(p.img,sx,sy,sw,sh,-iw/2,-ih/2,iw,ih);
+  tctx.restore();
+  // Garis potong tipis ~0.1 cm
+  tctx.save();tctx.strokeStyle='#111';tctx.lineWidth=1.5;
+  tctx.strokeRect(x+0.75,y+0.75,w-1.5,h-1.5);tctx.restore();
+}
+
+function drawPage(idx,tctx=ctx){
+  tctx.fillStyle='#fff';tctx.fillRect(0,0,W,H);
+  if(allPageLayouts[idx]){
+    allPageLayouts[idx].placed.forEach(item=>drawPhoto(item,tctx));
+  }
+}
+
+/* ═══ REBUILD & NAVIGATE ═══ */
+function rebuild(){
+  buildAllPageLayouts();
+  drawPage(currentPage);
+  updateNav();
+  updateStats();
+}
+
+function redrawCurrent(){
+  drawPage(currentPage);
+}
+
+function gotoPage(idx){
+  if(idx<0||idx>=allPageLayouts.length)return;
+  currentPage=idx;
+  drawPage(currentPage);
+  updateNav();
+  updateStats();
+}
+
+function updateNav(){
+  const total=allPageLayouts.length;
+  const hasPhotos=photos.length>0;
+  $('pageIndicator').textContent=hasPhotos?`Halaman ${currentPage+1} dari ${total}`:' — ';
+  $('prevPage').disabled=currentPage===0;
+  $('nextPage').disabled=currentPage>=total-1;
+
+  // Tampilkan nav hanya jika > 1 halaman
+  const navWrap=$('pageNavWrap');
+  navWrap.style.display=total>1?'flex':'none';
+
+  // Dot indicators (maks 20 dot, lebih dari itu tampilkan angka saja)
+  const dotsEl=$('pageDots');
+  if(total<=20){
+    dotsEl.innerHTML=Array(total).fill(0).map((_,i)=>
+      `<button class="page-dot${i===currentPage?' active':''}" data-page="${i}" title="Halaman ${i+1}"></button>`
+    ).join('');
+  }else{
+    dotsEl.innerHTML=`<span style="font-size:12px;font-weight:800;color:var(--purple2)">${currentPage+1} / ${total}</span>`;
+  }
+}
+
+function updateStats(){
+  $('totalCount').textContent=photos.length;
+  $('pageCount').textContent=allPageLayouts.length;
+  $('placedCount').textContent=allPageLayouts[currentPage]?.placed.length||0;
+  if(!photos.length){
+    $('status').textContent='Upload foto untuk melihat hasil penataan.';
+  }else{
+    const mode=$('layoutMode').value;
+    const pg=currentPage+1,tot=allPageLayouts.length;
+    const pl=allPageLayouts[currentPage]?.placed.length||0;
+    if(mode==='twelve'){
+      $('status').textContent=`✅ Lembar ${pg} dari ${tot} — ${pl} foto (${photos.length} foto total → ${tot} lembar 4R)`;
+    }else{
+      $('status').textContent=`✅ Lembar ${pg} dari ${tot} — ${pl} foto ditata pada halaman ini`;
+    }
+  }
+}
+
+/* ═══ DOWNLOAD & PRINT ═══ */
+function getOffscreenCtx(){
+  const off=document.createElement('canvas');off.width=W;off.height=H;
+  return {off,octx:off.getContext('2d')};
+}
+
+function downloadCurrentPage(type){
+  const a=document.createElement('a');
+  a.download=`cetak-4R-hal${currentPage+1}.${type==='image/jpeg'?'jpg':'png'}`;
+  a.href=canvas.toDataURL(type,type==='image/jpeg'?0.96:undefined);
+  a.click();
+}
+
+function downloadAllPdf(){
+  if(!window.jspdf){alert('Library PDF belum termuat. Periksa koneksi internet.');return;}
+  const {jsPDF}=window.jspdf;
+  const pdf=new jsPDF({orientation:'portrait',unit:'mm',format:[101.6,152.4]});
+  const {off,octx}=getOffscreenCtx();
+  for(let i=0;i<allPageLayouts.length;i++){
+    if(i>0)pdf.addPage();
+    drawPage(i,octx);
+    pdf.addImage(off.toDataURL('image/jpeg',0.98),'JPEG',0,0,101.6,152.4);
+  }
+  pdf.save(`hasil-cetak-4R-${allPageLayouts.length}-lembar.pdf`);
+  drawPage(currentPage); // restore main canvas
+}
+
+function printCurrentPage(){
+  const url=canvas.toDataURL('image/png'),w=window.open('','_blank');
+  if(!w){alert('Popup diblokir. Izinkan popup untuk mencetak.');return;}
+  w.document.write(`<!doctype html><html><head><title>Cetak 4R</title><style>@page{size:101.6mm 152.4mm;margin:0}html,body{margin:0;padding:0;width:101.6mm;height:152.4mm}img{display:block;width:101.6mm;height:152.4mm}</style></head><body><img src="${url}" onload="setTimeout(()=>window.print(),300)"></body></html>`);
+  w.document.close();
+}
+
+function printAllPages(){
+  const {off,octx}=getOffscreenCtx();
+  const urls=allPageLayouts.map((_,i)=>{
+    drawPage(i,octx);
+    return off.toDataURL('image/png');
+  });
+  drawPage(currentPage); // restore
+  const w=window.open('','_blank');
+  if(!w){alert('Popup diblokir. Izinkan popup untuk mencetak.');return;}
+  const imgs=urls.map(u=>`<img src="${u}">`).join('');
+  w.document.write(`<!doctype html><html><head><title>Cetak Semua 4R</title><style>@page{size:101.6mm 152.4mm;margin:0}html,body{margin:0;padding:0}img{display:block;width:101.6mm;height:152.4mm;page-break-after:always;page-break-inside:avoid}</style></head><body>${imgs}<script>window.onload=()=>setTimeout(()=>window.print(),600)<\/script></body></html>`);
+  w.document.close();
+}
+
+/* ═══ EVENTS ═══ */
+$('layoutMode').addEventListener('change',()=>{renderList();rebuild();});
+$('clearAll').onclick=()=>{photos.forEach(p=>URL.revokeObjectURL(p.url));photos=[];renderList();rebuild();};
+
+$('prevPage').onclick=()=>gotoPage(currentPage-1);
+$('nextPage').onclick=()=>gotoPage(currentPage+1);
+
+// Dot navigation
+$('pageDots').addEventListener('click',e=>{
+  const dot=e.target.closest('.page-dot');
+  if(dot)gotoPage(Number(dot.dataset.page));
+});
+
+$('downloadJpg').onclick=()=>downloadCurrentPage('image/jpeg');
+$('downloadPng').onclick=()=>downloadCurrentPage('image/png');
+$('downloadAllPdf').onclick=()=>downloadAllPdf();
+$('print').onclick=()=>printCurrentPage();
+$('printAll').onclick=()=>printAllPages();
+
+renderList();rebuild();
+})();
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>if(!window.jspdf){document.write('<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"><\/script>');}</script>
+<script>
+(function(){
+  var root=document.documentElement,dots=document.querySelectorAll('.theme-dot');
+  function apply(t){
+    if(t==='ungu')root.removeAttribute('data-theme');else root.setAttribute('data-theme',t);
+    dots.forEach(function(d){d.setAttribute('aria-pressed',String(d.dataset.theme===t))});
+  }
+  var cur='ungu';try{cur=localStorage.getItem('akstudio-theme')||'ungu'}catch(e){}
+  if(!document.querySelector('.theme-dot[data-theme="'+cur+'"]'))cur='ungu';
+  apply(cur);
+  dots.forEach(function(d){d.addEventListener('click',function(){
+    apply(d.dataset.theme);try{localStorage.setItem('akstudio-theme',d.dataset.theme)}catch(e){}
+  })});
+})();
+</script>
+</body>
+</html>
